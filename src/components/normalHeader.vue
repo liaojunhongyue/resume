@@ -6,17 +6,16 @@
           <img src="../assets/images/back.png" />
         </div>
         <p class="title">{{ title }}</p>
-        <div class="navigation">
+        <div class="navigation" @click="showMenu()">
           <img src="../assets/images/navigation.png" />
         </div>
       </div>
       <div class="headerBlock"></div>
     </header>
-    <div class="navMask"></div>
-    <nav class="nav">
-      <router-link class="navLink" to="/basic">基本信息</router-link>
-      <router-link class="navLink" to="/skill">掌握技能</router-link>
-    </nav>
+    <div class="navMask" :class="isShowMenu ? 'navMaskAnimate' : ''"></div>
+    <!-- <nav class="nav">
+      <router-link v-for="item in navData" :key="item.title" class="navLink" :to="item.link">{{item.title}}</router-link>
+    </nav> -->
   </div>
 </template>
 <script>
@@ -29,9 +28,49 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      currentRouter: '',
+      isShowMenu: false,
+      navData: [
+        {
+          title: '基本信息',
+          link: '/basic'
+        },
+        {
+          title: '掌握技能',
+          link: '/skill'
+        },
+        {
+          title: '教育经历',
+          link: '/education'
+        },
+        {
+          title: '项目&作品',
+          link: '/works'
+        },
+        {
+          title: '工作经历',
+          link: '/job'
+        }
+      ]
+    }
+  },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        console.log(val)
+      },
+      immediate: true
+    }
+  },
   methods: {
     goHistory () {
       this.$router.go(-1)
+    },
+    showMenu () {
+      this.isShowMenu = true
+      console.log(this.isShowMenu)
     }
   }
 }
@@ -87,8 +126,21 @@ header .headerBlock {
   width: 100%;
   height: calc(100vh - 12vw);
   background-color: #000;
-  opacity: 0.7;
+  opacity: 0;
   z-index: 1;
+  display: none;
+}
+.navMaskAnimate {
+  display: block;
+  animation: mask 0.8s forwards;
+}
+@keyframes mask {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.7;
+  }
 }
 .nav {
   position: fixed;
@@ -97,6 +149,9 @@ header .headerBlock {
   width: 100%;
   background-color: #fff;
   z-index: 2;
+}
+.navAnimate {
+
 }
 .nav .navLink {
   display: block;
